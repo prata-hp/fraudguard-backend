@@ -1,22 +1,17 @@
-const express = require('express');
+// index.js
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const PORT = process.env.PORT || 3000;
-const cors = require('cors');
+const reportRoute = require("./routes/reportRoute");
 
 app.use(cors());
-
 app.use(express.json());
 
-// Example route
-app.get('/', (req, res) => {
-  res.send('FraudGuard backend is running!');
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Hello from backend! to h.p, deefuk and team ingenuity" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.use("/api", reportRoute); // ✅ This connects /api/report to reportRoute
 
-// first message
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'Hello from backend! to h.p, deefuk and team ingenuity' });
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
