@@ -1,25 +1,36 @@
 
 const express = require("express");
 const router = express.Router();
-const db = require("../firebase"); // Make sure firebase.js exports the correct Firestore instance
+const db = require("../firebase"); // Firestore instance
 
 // POST route to handle fraud report submissions
 router.post("/report", async (req, res) => {
-  const { url, reason, timestamp } = req.body;
+  const { url, reason, timestamp, userId } = req.body;
 
-  // ✅ Log received data safely
-  console.log("📩 New Report Received:", { url, reason, timestamp });
+  // ✅ Log received data including optional userId
+  console.log("📩 New Report Received:", {
+    url,
+    reason,
+    timestamp,
+    userId: userId || "anonymous"
+  });
 
   try {
     // ✅ Save the report to Firebase Firestore
-    await db.collection("fraudReports").add({
+    const reportData = {
       url,
       reason,
-      timestamp: timestamp || Date.now()
-    });
+      timestamp: timestamp || Date.now(),
+      userId: userId || "anonymous"
+    };
+
+    await db.collection("fraudReports").add(reportData);
 
     // ✅ Respond to extension
-    res.status(200).json({ message: "Report saved to Firebase" });
+    res.status(200).json({
+      message: "Report saved to Firebase",
+      report: reportData
+    });
   } catch (error) {
     console.error("🔥 Error saving report:", error);
     res.status(500).json({ error: "Failed to save report" });
