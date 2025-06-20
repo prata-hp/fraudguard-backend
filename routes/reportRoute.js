@@ -1,13 +1,11 @@
-
 const express = require("express");
 const router = express.Router();
-const db = require("../firebase"); // Firestore instance
+const db = require("../firebase"); // Firestore instance via Admin SDK
 
-// POST route to handle fraud report submissions
+// ✅ POST route to handle fraud report submissions
 router.post("/report", async (req, res) => {
   const { url, reason, timestamp, userId } = req.body;
 
-  // ✅ Log received data including optional userId
   console.log("📩 New Report Received:", {
     url,
     reason,
@@ -16,7 +14,6 @@ router.post("/report", async (req, res) => {
   });
 
   try {
-    // ✅ Save the report to Firebase Firestore
     const reportData = {
       url,
       reason,
@@ -26,7 +23,6 @@ router.post("/report", async (req, res) => {
 
     await db.collection("fraudReports").add(reportData);
 
-    // ✅ Respond to extension
     res.status(200).json({
       message: "Report saved to Firebase",
       report: reportData
@@ -34,6 +30,26 @@ router.post("/report", async (req, res) => {
   } catch (error) {
     console.error("🔥 Error saving report:", error);
     res.status(500).json({ error: "Failed to save report" });
+  }
+});
+
+// ✅ GET route to test Firebase connection
+router.get("/test-firebase", async (req, res) => {
+  try {
+    const testDoc = {
+      testMessage: "🧪 Firestore connection test successful!",
+      timestamp: Date.now()
+    };
+
+    await db.collection("testCollection").add(testDoc);
+
+    res.status(200).json({
+      message: "✅ Successfully wrote to Firestore",
+      data: testDoc
+    });
+  } catch (error) {
+    console.error("🔥 Firestore test error:", error);
+    res.status(500).json({ error: "❌ Firestore test failed" });
   }
 });
 
