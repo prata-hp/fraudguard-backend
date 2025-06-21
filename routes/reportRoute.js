@@ -28,7 +28,8 @@ router.post("/report", async (req, res) => {
       report: reportData
     });
   } catch (error) {
-    console.error("🔥 Error saving report:", error);
+    console.error("🔥 Error saving report to Firebase:", error.message, error.stack);
+
     res.status(500).json({ error: "Failed to save report" });
   }
 });
