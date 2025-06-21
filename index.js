@@ -11,7 +11,7 @@ app.use(express.json());
 
 // ✅ Simple test route
 app.get("/api/test", (req, res) => {
-  res.json({ message: "Hello from backend! to h.p, deefuk and team ingenuity" });
+  res.json({ message: "Hello from backend! and team Ingenuity" });
 });
 
 // ✅ Mount API routes
