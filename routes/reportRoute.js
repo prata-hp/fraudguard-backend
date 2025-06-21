@@ -21,10 +21,11 @@ router.post("/report", async (req, res) => {
       userId: userId || "anonymous"
     };
 
-    await db.collection("fraudReports").add(reportData);
+    await db.collection("userFraudReports").add(reportData);
+    console.log("✅ Report successfully written to 'userFraudReports' collection");
 
     res.status(200).json({
-      message: "Report saved to Firebase",
+      message: "Report saved to Firebase (userFraudReports)",
       report: reportData
     });
   } catch (error) {
@@ -45,7 +46,7 @@ router.get("/test-firebase", async (req, res) => {
     await db.collection("testCollection").add(testDoc);
 
     res.status(200).json({
-      message: "✅ Successfully wrote to Firestore",
+      message: "✅ Successfully wrote to Firestore (testCollection)",
       data: testDoc
     });
   } catch (error) {
